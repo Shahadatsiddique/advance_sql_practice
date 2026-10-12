@@ -148,56 +148,14 @@ SELECT paid, SUM(amount) AS total_fine_amount
 FROM Fines
 GROUP BY paid;
 
--- Q11. Find books with available copies below the overall average. (Subquery + AVG)
-SELECT book_id, title, available_copies
-FROM Books
-WHERE available_copies < (SELECT AVG(available_copies) FROM Books)
-ORDER BY available_copies;
 
--- Q12. Show genres whose average available copies are at least 2. (AVG + HAVING)
+-- Q11. Show genres whose average available copies are at least 2. (AVG + HAVING)
 SELECT genre, AVG(available_copies) AS average_available_copies
 FROM Books
 GROUP BY genre
 HAVING AVG(available_copies) >= 2
 ORDER BY average_available_copies DESC;
 
--- Q13. Label each book as previously issued or never issued. (CASE + EXISTS)
-SELECT b.book_id, b.title,
-       CASE
-           WHEN EXISTS (SELECT 1 FROM Issued_Books i WHERE i.book_id = b.book_id)
-               THEN 'Previously Issued'
-           ELSE 'Never Issued'
-       END AS issue_status
-FROM Books b
-ORDER BY b.book_id;
-
--- Q14. Find books whose available copies exceed the average for their own genre.
--- Concept: correlated subquery.
-SELECT b.book_id, b.title, b.genre, b.available_copies
-FROM Books b
-WHERE b.available_copies > (
-    SELECT AVG(b2.available_copies)
-    FROM Books b2
-    WHERE b2.genre = b.genre
-)
-ORDER BY b.genre, b.available_copies DESC;
-
--- Q15. Find members whose issue count is above the average issue count
--- among members who have at least one issue record. (Correlated subquery)
-SELECT m.member_id, m.name
-FROM Members m
-WHERE (
-    SELECT COUNT(*)
-    FROM Issued_Books i
-    WHERE i.member_id = m.member_id
-) > (
-    SELECT AVG(member_issue_counts.issue_count)
-    FROM (
-        SELECT COUNT(*) AS issue_count
-        FROM Issued_Books
-        GROUP BY member_id
-    ) AS member_issue_counts
-);
 
 -- 4. QUICK REVISION
 -- WHERE: filters rows before grouping.
