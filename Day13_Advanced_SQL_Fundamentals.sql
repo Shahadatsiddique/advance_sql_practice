@@ -7,8 +7,9 @@ WARNING: This script drops and recreates the four tables. Run only in a practice
 NOTE: The sample dataset is self-contained; adjust sample rows if your local database differs.
 */
 
-CREATE DATABASE IF NOT EXISTS library;
-USE library;
+
+CREATE DATABASE IF NOT EXISTS library_sql_practice;
+USE library_sql_practice;
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS Fines;
